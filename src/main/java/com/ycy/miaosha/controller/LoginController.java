@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * @author ycy
@@ -34,7 +36,7 @@ public class LoginController {
     @RequestMapping("/do_login")
     @ResponseBody
     //注解进行校验
-    public Result<Boolean> doLogin(@Validated LoginVo loginVo){
+    public Result<Boolean> doLogin(HttpServletResponse response, @Validated LoginVo loginVo){
         log.info(loginVo.toString());
 //        //参数校验
 //        String passInput = loginVo.getPassword();
@@ -47,7 +49,7 @@ public class LoginController {
 //        }
 
         //登录
-        userService.login(loginVo);
+        userService.login(response,loginVo);
 //        if (cm.getCode() == 0){
 //            return Result.success(true);
 //        }else {

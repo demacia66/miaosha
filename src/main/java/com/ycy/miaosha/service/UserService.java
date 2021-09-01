@@ -1,7 +1,11 @@
 package com.ycy.miaosha.service;
 
 import com.ycy.miaosha.dao.UserMapper;
+import com.ycy.miaosha.entity.MiaoshaUser;
 import com.ycy.miaosha.entity.User;
+import com.ycy.miaosha.redis.MiaoshaUserKey;
+import com.ycy.miaosha.redis.RedisService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,9 @@ public class UserService {
 
     @Autowired
     private UserMapper mapper;
+
+    @Autowired
+    private RedisService redisService;
 
     public User getByUserId(Integer id){
         return mapper.getUserById(id);
@@ -35,4 +42,13 @@ public class UserService {
         return true;
     }
 
+    public MiaoshaUser getByToken(String token) {
+        if (StringUtils.isEmpty(token)){
+            return null;
+        }
+        MiaoshaUser user = redisService.get(MiaoshaUserKey.token, token, MiaoshaUser.class);
+        //延长有效期
+
+        return user;
+    }
 }
